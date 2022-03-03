@@ -1,0 +1,8 @@
+{
+  "extensionTemplate" : "simulator",
+  "extension" : {
+    "name" : "Playdate",
+    "identifier" : "com.panic.Playdate"
+  },
+  "identifier" : "4A186E10-D4BD-4CDF-9D3E-8D4431688918"
+}

@@ -1,0 +1,5 @@
+name=Pathfinder
+author=Panic, Inc.
+description=Pathfinding Demo.
+bundleID=com.panic.pathfinder
+imagePath=card

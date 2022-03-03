@@ -1,0 +1,7 @@
+name=Flippy Fish
+author=Panic Inc.
+description=A spritely little fish
+bundleID=com.panic.flippyfish
+version=0.1
+buildNumber=100
+imagePath=SystemAssets

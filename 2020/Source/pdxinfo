@@ -1,0 +1,5 @@
+name=2020
+author=Panic, Inc
+description=Sprite example code.
+bundleID=com.panic.2020
+imagePath=system/

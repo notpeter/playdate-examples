@@ -1,0 +1,5 @@
+name=CollisionMaskTest
+author=Panic, Inc.
+description=Demonstration of sprite layers and collision masks.
+bundleID=com.panic.collisionMaskTest
+imagePath=card.png
