@@ -26,6 +26,7 @@
 -- import 'sndtest'
 -- import 'spritescaling'
 -- import 'stencil'
+-- import 'synth'
 -- import 'tilemaptest'
 -- import 'tonewheel'
 -- import 'zorder'

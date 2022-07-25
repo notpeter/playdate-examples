@@ -1,5 +1,4 @@
 
-playdate.graphics.setImageDrawMode(playdate.graphics.kDrawModeFillWhite)
 playdate.graphics.drawText("Press A or B to play sounds", 95, 100)
 
 boing = playdate.sound.sampleplayer.new('assets/audio-8000')
@@ -27,4 +26,7 @@ function playdate.BButtonDown()
 	boing:play()
 	boing2:play()
 	boing3:play()
+end
+
+function playdate.update()
 end
