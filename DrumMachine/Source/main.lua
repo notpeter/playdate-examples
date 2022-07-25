@@ -1,10 +1,15 @@
 --[[
 	16-step sample sequencer
+	
+	D-pad to move cursor, B starts and stops playback, A button sets and removes notes.
+	Hold A and push up/down to change volume of note.
 ]]
 
 isRunning = true
 
 local snd = playdate.sound
+
+-- global effects: grungy with a bit of echo
 
 o = snd.overdrive.new()
 snd.addEffect(o)
@@ -16,17 +21,22 @@ o:setLimit(0.9)
 
 d = snd.delayline.new(0.25)
 d:setFeedback(0.1)
+d:setMix(0.2)
 snd.addEffect(d)
 
-function start() start = true end
-function stop()	isRunning = false end
+
+--[[
+	We'll make a separate instrument for each track so that we can play each sample at different
+	pitches if we want (though that's not implemented yet--we always use midi note 60=middle C,
+	which plays back samples at normal rate). We could instead create one instrument with the
+	samples assigned to different notes, using i:addVoice(s, note)
+]]
 
 function newTrack(file)
 	local t = snd.track.new()
 	local i = snd.instrument.new()
 	local sample = snd.sample.new(file)
 	local s = snd.synth.new(sample)
-	s:setRelease(100)
 	s:setVolume(0.5)
 	i:addVoice(s)
 	t:setInstrument(i)
@@ -148,6 +158,7 @@ end
 local laststep = 0
 
 function playdate.update()
+	-- The only thing we have to do here is update the display when the play step changes
 	local step = sequence:getCurrentStep()
 
 	if step ~= laststep then
@@ -157,8 +168,8 @@ function playdate.update()
 	end
 end
 
-local adjusted
-local adjusting
+local adjusted = false
+local adjusting = false
 
 function playdate.leftButtonDown()
 	if adjusting then playdate.AButtonUp() adjusted = true end
@@ -170,7 +181,7 @@ function playdate.rightButtonDown()
 	if selectedColumn < 16 then select(selectedColumn+1, selectedRow) end
 end
 
-function setTrackNote(track, pos, val)
+local function setTrackNote(track, pos, val)
 	track.notes[pos] = val
 	updateTrack(track,track.notes)
 	drawGrid()
@@ -180,7 +191,7 @@ function setTrackNote(track, pos, val)
 	end
 end
 
-function adjustSelectedNote(d)
+local function adjustSelectedNote(d)
 	local track = tracks[selectedRow]
 	adjusted = true
 	
