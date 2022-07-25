@@ -109,6 +109,9 @@ end
 
 -- sets the tile to the new value and updates our wall edges array
 function Level:setTileAtPosition(column, row, newTileValue)
+	-- The tilemap isn't in a sprite, so we have to tell the display list that it needs to redraw the changed tile.
+	-- Also, sprite.addDirtyRect uses screen instead of world coordinates so we also have to add the offset
+	gfx.sprite.addDirtyRect(column * TILE_SIZE - TILE_SIZE + cameraX, row * TILE_SIZE - TILE_SIZE, TILE_SIZE, TILE_SIZE)
 	walls.tilemap:setTileAtPosition(column, row, newTileValue)
 end
 
@@ -185,7 +188,7 @@ end
 
 -- moves the camera horizontally based on player's current position
 function Level:updateCameraPosition()
-	local newX = max(min(player.position.x - halfDisplayWidth + 60, maxX), minX)
+	local newX = floor(max(min(player.position.x - halfDisplayWidth + 60, maxX), minX))
 	
 	if newX ~= -cameraX then
 		cameraX = -newX

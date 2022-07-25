@@ -25,15 +25,16 @@ local lsAnim = Animator.new(10000, ls, playdate.easingFunctions.linear, 2000)
 -------------------------------------------------------------------------------------------------
 local arc = geo.arc.new(120, 40, 30, -95, 100)
 local arcAnim = Animator.new(2000, arc)
-arcAnim.repeatCount = 4
+arcAnim.repeatCount = 2
+arcAnim.reverses = true
+
 
 ---------------------------------------------------------------
 -- animation along a star-shaped polygon, repeating 10 times --
 ---------------------------------------------------------------
 local poly = geo.polygon.new(46,7, 46,29, 68,37, 46,44, 46,67, 32,48, 9,55, 23,37, 9,19, 32,26)
 poly:close()
-local polyAnim = Animator.new(4000, poly)
-polyAnim.repeatCount = 100
+local polyAnim = Animator.new(360, poly)
 
 
 --------------------------------------------------------------------------------
@@ -77,11 +78,10 @@ partsAnimation2.repeatCount = -1
 --------------------------------------------------------------------------------------------------------------
 -- animation with two lines parts, which are the reverse of one another, to create a little bounch animation --
 --------------------------------------------------------------------------------------------------------------
-local downLine = geo.lineSegment.new(40, 160, 40, 80)
-local upLine = geo.lineSegment.new(40, 80, 40, 160)
-local bounceAnim = Animator.new(2000, {upLine, downLine}, playdate.easingFunctions.inOutCubic)
-bounceAnim.repeatCount = -1
-
+local bounceLine = geo.lineSegment.new(40, 80, 40, 160)
+local bounceAnim = Animator.new(1000, bounceLine, playdate.easingFunctions.inCubic)
+bounceAnim.repeats = true
+bounceAnim.reverses = true
 
 
 -----------------------------------
@@ -134,9 +134,15 @@ function playdate.BButtonDown()
 end
 
 
+function playdate.downButtonDown()
+	arcAnim:reset()
+	bounceAnim:reset()
+	lsAnim:reset()
+end
+
 
 function playdate.update()
-
+	
 	gfx.clear()
 	
 	gfx.sprite.update()
@@ -153,12 +159,14 @@ function playdate.update()
 		gfx.drawArc(arc)
 		local p = arcAnim:currentValue()
 		gfx.fillCircleAtPoint(p, 5)
+		
+		gfx.drawTextAligned(math.floor(100*arcAnim:progress()).."%", 121, 30, kTextAlignment.center)
 	end
 	
 	-- draw the polygon animation
 	if polyAnim then
 		gfx.drawPolygon(poly)
-		local p = polyAnim:currentValue()
+		local p = polyAnim:valueAtTime(playdate.getCrankPosition())
 		gfx.fillCircleAtPoint(p, 5)
 	end	
 
@@ -194,7 +202,7 @@ function playdate.update()
 	
 	-- draw the bounce animation
 	if bounceAnim ~= nil then
-		gfx.drawLine(upLine)		
+		gfx.drawLine(bounceLine)
 		local p = bounceAnim:currentValue()
 		gfx.fillCircleAtPoint(p, 5)
 	end
@@ -206,7 +214,7 @@ function playdate.update()
 		gfx.drawArc(topArc3)
 		gfx.drawArc(bottomArc3)
 		
-		-- the sprite iself will handle it's own drawing here
+		-- the sprite itself will handle its own drawing here
 	end
 	
 	-- draw the number and point animations if either exists
