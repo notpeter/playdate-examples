@@ -300,7 +300,7 @@ function Level:setupWallSprites()
 				local startX = x
 				local cellWidth = TILE_SIZE
 				
-				-- add "wall" sprites for briks and question blocks
+				-- add "wall" sprites for bricks and question blocks
 				if gid == BRICK_GID or gid == QBOX_GID then
 					local w = gfx.sprite.new()
 					w:setUpdatesEnabled(false) -- remove from update cycle
