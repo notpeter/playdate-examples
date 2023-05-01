@@ -65,11 +65,12 @@ local listFont = gfx.font.new('assets/Bitmore-Medieval')
 listFont:setTracking(1)
 
 local listviewHeight = 36
+local lastDrawnListviewHeight = 0
 
 local menuOptions = {"Sword", "Shield", "Arrow", "Sling", "Stone", "Longbow", "MorningStar", "Armour", "Dagger", "Rapier", "Skeggox", "War Hammer", "Battering Ram", "Catapult"}
 
 local listview = playdate.ui.gridview.new(0, 10)
-listview.backgroundImage = playdate.graphics.nineSlice.new("assets/scrollbg", 20, 23, 92, 28)
+listview.backgroundImage = playdate.graphics.nineSlice.new("assets/scrollbg", 20, 22, 88, 28)
 listview:setNumberOfRows(#menuOptions)
 listview:setCellPadding(0, 0, 13, 10)
 listview:setContentInset(24, 24, 13, 11)
@@ -197,12 +198,17 @@ function playdate.update()
 	playdate.timer.updateTimers()
 	
 	-- draw the left side grid view
-	gridview:drawInRect(20, 20, 180, 200)
+	if gridview.needsDisplay == true then
+		gridview:drawInRect(20, 20, 180, 200)
+	end
 	
 	-- draw the right side list view (clear the area first to avoid animation smudges)
-	gfx.setColor(gfx.kColorWhite)
-	gfx.fillRect(220, 20, 160, 200)
-	listview:drawInRect(220, 20, 160, listviewHeight)
+	if lastDrawnListviewHeight ~= listviewHeight or listview.needsDisplay == true then
+		gfx.setColor(gfx.kColorWhite)
+		gfx.fillRect(220, 20, 160, 200)
+		listview:drawInRect(220, 20, 160, listviewHeight)
+		lastDrawnListviewHeight = listviewHeight
+	end
 	
 	-- draw the selection dot
 	if selectedGrid == 0 then
@@ -218,10 +224,3 @@ function playdate.update()
 	end
 
 end
-
-
-
-
-
-
-

@@ -79,10 +79,7 @@ local function addWallBlock(x,y,w,h)
 	block:setSize(w, h)
 	block:moveTo(x, y)
 	block:setCollideRect(0,0,w,h)
-	
-	-- don't need to specifically set a layer mask walls, because by default sprites exist on all layers
-	-- don't need to set a collision mask because the walls themselves never move or cause collisions, but even if they did, we'd want them to collide with all layers, which is the default
-	
+	block:setGroupMask(0xFFFFFFFF) -- everything should collide with a wall - djm DO! include this change
 	block:addSprite()
 end
 

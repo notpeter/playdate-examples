@@ -14,7 +14,7 @@ sprite:resetGroupMask()
 
 Collision layer assignment:
 
-Sprites only collide if the moving sprite's collidesWith mask matches at least one group of a potential collision sprite (i.e. a bitwise AND (&) between the moving sprite's collidesWith mask and a potential collision sprite's groupMask != zero). By default a sprite can collide with all groups.
+Sprites only collide if the moving sprite's collidesWith mask matches at least one group of a potential collision sprite (i.e. a bitwise AND (&) between the moving sprite's collidesWith mask and a potential collision sprite's groupMask != zero). By default sprites without masks set can collide with other sprites that also don't have a mask.
 
 sprite:setCollidesWithGroupsMask()
 sprite:setCollidesWithGroups(layers)

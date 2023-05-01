@@ -4,30 +4,23 @@ import 'CoreLibs/graphics.lua'
 
 local gfx = playdate.graphics
 
-gfx.setBackgroundColor(gfx.kColorWhite)
-gfx.clear()
-
 playdate.startAccelerometer()
 local gravityx, gravityy = 0, 0
 
-ball = gfx.sprite.new()
-ball.__index = ball
+class("ball").extends(gfx.sprite)
 
 local gravity = 0.4
 local wallbounce = 0.8
-local ballCount = 60
+local ballCount = 50
 
-
-function ball:new()
-	local o = gfx.sprite.new()
-	setmetatable(o, ball)
-	o.radius = 5
-	o:setSize(2*o.radius+1, 2*o.radius+1)
-	o:setCollideRect(0, 0, 2*o.radius+1, 2*o.radius+1)
-	o:moveTo(math.random(400), math.random(240))
-	o:setVelocity(math.random(-5,5), math.random(-5,5))
-	o:add()
-	return o
+function ball:init()
+	ball.super.init(self)
+	self.radius = 5
+	self:setSize(2*self.radius+1, 2*self.radius+1)
+	self:setCollideRect(0, 0, 2*self.radius+1, 2*self.radius+1)
+	self:moveTo(math.random(400), math.random(240))
+	self:setVelocity(math.random(-5,5), math.random(-5,5))
+	self:add()
 end
 
 
@@ -87,7 +80,6 @@ function ball:collide(c)
 end
 
 
-
 local function checkCollisions()
 
 	local collisions = gfx.sprite.allOverlappingSprites()	
@@ -145,25 +137,29 @@ function ball:update()
 	self:moveTo(newx, newy)
 end
 
-
-
-
 -- create the ball sprites
 for i = 1, ballCount do
-	ball:new()
+	ball()
 end
 
 
+-- in the case of lots of small sprites spread across the full screen, it's
+--  often faster to skip dirty rect checking and redraw the entire screen
+
+local alwaysredraw = false
+
+function playdate.AButtonDown()
+	alwaysredraw = not alwaysredraw
+	print("always redraw: "..tostring(alwaysredraw))
+	gfx.sprite.setAlwaysRedraw(alwaysredraw)
+end
+
 
 function playdate.update()
-
-	gfx.clear()
-
 	gravityx, gravityy = playdate.readAccelerometer()
-
 	checkCollisions()
 	gfx.sprite.update()
-
+	playdate.drawFPS(0,0)
 end
 
 

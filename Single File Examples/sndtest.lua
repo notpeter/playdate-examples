@@ -3,7 +3,6 @@ snd = playdate.sound
 sample = snd.sampleplayer.new("assets/audio-8000")
 sample:setFinishCallback(function() print("finished!") end)
 
-playdate.graphics.setImageDrawMode(playdate.graphics.kDrawModeFillWhite)
 playdate.graphics.drawText("Press A or B to play sounds", 95, 100)
 
 sampletests =
