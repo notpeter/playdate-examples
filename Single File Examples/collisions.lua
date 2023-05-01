@@ -61,11 +61,11 @@ end
 -- override Player's draw method so player1 gets drawn differently
 function player:draw(x, y, width, height)
 	local cx, cy, width, height = self:getCollideBounds()
-	
+
 	gfx.setColor(playdate.graphics.kColorBlack)
 	gfx.fillRect(cx, cy, width, height)
 	gfx.setColor(playdate.graphics.kColorWhite)
-	gfx.fillRect(cx+6, cy+6, width-12, height-12)	
+	gfx.fillRect(cx+6, cy+6, width-12, height-12)
 end
 
 
@@ -76,34 +76,34 @@ end
 
 -- Player sprites just bounce around, reflecting off of each other and boxes
 local function updatePlayer(dt, player)
-	
+
   local speed = player.speed
 
   local dx, dy = 0, 0
-  
+
   if playdate.buttonIsPressed(playdate.kButtonRight) then
   	player.velocityX = player.velocityX + 10
-  	
+
   elseif playdate.buttonIsPressed(playdate.kButtonLeft) then
   	player.velocityX = player.velocityX - 10
   end
-  
+
   if playdate.buttonIsPressed(playdate.kButtonDown) then
   	player.velocityY = player.velocityY + 10
-  	
+
   elseif playdate.buttonIsPressed(playdate.kButtonUp) then
 		player.velocityY = player.velocityY - 10
   end
-  
+
   dx = player.velocityX * dt
   dy = player.velocityY * dt
 
 	if dx ~= 0 or dy ~= 0 then
-		
+
 		local actualX, actualY, cols, cols_len = player:moveWithCollisions(player.x + dx, player.y + dy)
 
 	    for i=1, cols_len do
-	      local col = cols[i]      
+	      local col = cols[i]
 	    	-- not trying to be physics-accurate
 	    	if col.normal.x ~= 0 then -- hit something in the X direction
 				-- if we were sliding we'd just want to set our velocityX to zero, but we're bouncing, so...
@@ -117,7 +117,7 @@ local function updatePlayer(dt, player)
 					 player.velocityX = -player.velocityX
 				end
 			end
-		  
+
 		    if col.normal.y ~= 0 then -- hit something in the X direction
 				if col.other:isa(Player) then
 					col.other.velocityY = col.other.velocityY + (player.velocityY * 0.2)
@@ -136,23 +136,23 @@ end
 -- Draws some rays coming of of the main player to show off querySpriteInfoAlongLine(). Filled circles are drawn on collision entry points. Hollow circles are drawn on exit points. The size of the circle depends on how close the collision is to the beginnign of the line segment (which is the center of the sprite) Even though we do recieve information about all collisions, we're only drawing entry and exit points on the first box encountered.
 
 function drawRays()
-	
+
 	gfx.setColor(gfx.kColorBlack)
-	
+
 	for _, player in pairs(players) do
 	for extraAngle = 1, 12 do
-	
+
 		local line = Line.new(0,0, 500, 0)
-		
+
 		af:reset()
 		player.rayRotation = (player.rayRotation + 0.05)
 		af:rotate(player.rayRotation + extraAngle*30)
 		af:translate(player.x, player.y)
-	
+
 		local tls = af:transformedLineSegment(line)
 
 		local collisions, len = gfx.sprite.querySpriteInfoAlongLine(tls)
-	
+
 		if collisions then
 			for _, collision in pairs(collisions) do
 				if not collision.sprite:isa(Player) then	-- don't care about colliding with other player sprites
@@ -229,7 +229,7 @@ function fps(x,y)
 	local avgTick = calcAverageTick(currentTime - lastFrameTime)
 	local fps = floor((1000/avgTick) + 0.5)
 	lastFrameTime = currentTime
-		
+
 	gfx.drawText(fps, x, y)
 end
 
@@ -241,17 +241,17 @@ function playdate.update()
   	gfx.setColor(gfx.kColorWhite)
 	gfx.fillRect(0, 0, playdate.display.getWidth(), playdate.display.getHeight())
 	gfx.setColor(gfx.kColorBlack)
-  
+
 	for _, player in pairs(players) do
 		updatePlayer(dt, player)
 	end
-	
+
 	if not playdate.buttonIsPressed(playdate.kButtonA) then
 		drawRays()
 	end
-	
+
 	fps(10, 10)
-	
+
 	gfx.sprite:update()
 -- 	Input.afterUpdate()
 end
