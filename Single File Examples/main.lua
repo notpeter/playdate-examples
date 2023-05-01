@@ -6,7 +6,7 @@
 -- import 'audio'
 -- import 'balls'
 -- import 'blurdither'
-import 'collisions'
+-- import 'collisions'
 -- import 'crank'
 -- import 'drawmode'
 -- import 'drawSampled'
